@@ -1,0 +1,157 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<style>
+  .result-wrap {
+    max-width: 660px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  /* Big result announcement */
+  .result-headline {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    animation: fadeIn 0.5s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .result-headline.win  { color: var(--win);  text-shadow: var(--glow); }
+  .result-headline.lose { color: var(--lose); text-shadow: var(--glow2); }
+  .result-headline.draw { color: var(--draw); }
+
+  .result-sub {
+    color: var(--muted);
+    letter-spacing: 3px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  /* Choices display */
+  .choices-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+
+  .choice-card {
+    flex: 1;
+    max-width: 220px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 32px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .choice-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .choice-card.you::before  { background: var(--accent); }
+  .choice-card.cpu::before  { background: var(--accent2); }
+
+  .choice-card.you  { box-shadow: 0 0 30px rgba(0,245,212,0.1); }
+  .choice-card.cpu  { box-shadow: 0 0 30px rgba(247,37,133,0.1); }
+
+  .choice-who {
+    font-size: 0.68rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .choice-card.you .choice-who { color: var(--accent); }
+  .choice-card.cpu .choice-who { color: var(--accent2); }
+
+  .choice-emoji { font-size: 4rem; margin-bottom: 12px; line-height: 1; }
+
+  .choice-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    color: var(--text);
+  }
+
+  .vs-mid {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--muted);
+    letter-spacing: 2px;
+    flex-shrink: 0;
+  }
+
+  /* Actions */
+  .actions {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="result-wrap">
+
+  <!-- Result headline -->
+  {% if result.result == "Win" %}
+    <div class="result-headline win">🏆 Victory!</div>
+    <div class="result-sub">You outsmarted the machine</div>
+  {% elif result.result == "Lose" %}
+    <div class="result-headline lose">💀 Defeated!</div>
+    <div class="result-sub">The machine wins this round</div>
+  {% else %}
+    <div class="result-headline draw">⚡ Draw!</div>
+    <div class="result-sub">Great minds think alike</div>
+  {% endif %}
+
+  <!-- Choices -->
+  <div class="choices-display">
+    <div class="choice-card you">
+      <div class="choice-who">You chose</div>
+      <div class="choice-emoji">
+        {% if result.user_choice == "Rock" %}✊
+        {% elif result.user_choice == "Paper" %}✋
+        {% else %}✌️{% endif %}
+      </div>
+      <div class="choice-name">{{ result.user_choice }}</div>
+    </div>
+
+    <div class="vs-mid">VS</div>
+
+    <div class="choice-card cpu">
+      <div class="choice-who">Computer chose</div>
+      <div class="choice-emoji">
+        {% if result.computer_choice == "Rock" %}✊
+        {% elif result.computer_choice == "Paper" %}✋
+        {% else %}✌️{% endif %}
+      </div>
+      <div class="choice-name">{{ result.computer_choice }}</div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <a href="/gameplay" class="btn">Play Again</a>
+    <a href="/home" class="btn danger">Dashboard</a>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,189 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<style>
+  /* Stats row */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 22px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .stat-card.wins::before  { background: var(--win); }
+  .stat-card.losses::before { background: var(--lose); }
+  .stat-card.draws::before  { background: var(--draw); }
+
+  .stat-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .stat-card.wins .stat-num   { color: var(--win); }
+  .stat-card.losses .stat-num { color: var(--lose); }
+  .stat-card.draws .stat-num  { color: var(--draw); }
+
+  .stat-label {
+    font-size: 0.68rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* Play button CTA */
+  .play-cta {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .play-cta p {
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+  }
+
+  /* History table */
+  .history-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .history-header {
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .history-count {
+    color: var(--accent);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead tr { background: rgba(0,245,212,0.03); }
+
+  th {
+    padding: 12px 20px;
+    text-align: left;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(30,42,58,0.5);
+    font-size: 0.95rem;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(0,245,212,0.02); }
+
+  .played-at { color: var(--muted); font-size: 0.8rem; }
+
+  .empty-state {
+    padding: 60px;
+    text-align: center;
+    color: var(--muted);
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+  }
+
+  .empty-icon { font-size: 2.5rem; margin-bottom: 14px; opacity: 0.4; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stat-card wins">
+    <div class="stat-num">{{ wins }}</div>
+    <div class="stat-label">Wins</div>
+  </div>
+  <div class="stat-card losses">
+    <div class="stat-num">{{ losses }}</div>
+    <div class="stat-label">Losses</div>
+  </div>
+  <div class="stat-card draws">
+    <div class="stat-num">{{ draws }}</div>
+    <div class="stat-label">Draws</div>
+  </div>
+</div>
+
+<!-- Play CTA -->
+<div class="play-cta">
+  <p>Ready to battle the machine?</p>
+  <a href="/gameplay" class="btn">⚔ Play Now</a>
+</div>
+
+<!-- Match History -->
+<div class="history-section">
+  <div class="history-header">
+    <div class="section-label" style="margin:0">// Match History</div>
+    <div class="history-count">{{ history|length }} games</div>
+  </div>
+
+  {% if history %}
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Your Choice</th>
+        <th>Computer</th>
+        <th>Result</th>
+        <th>When</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for match in history %}
+      <tr>
+        <td style="color:var(--muted);font-size:0.8rem">{{ match.id }}</td>
+        <td>{{ match.user_choice }}</td>
+        <td>{{ match.computer_choice }}</td>
+        <td><span class="badge {{ match.result }}">{{ match.result }}</span></td>
+        <td class="played-at">{{ match.played_at.strftime('%b %d, %H:%M') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">🎮</div>
+    No matches yet — make your first move!
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

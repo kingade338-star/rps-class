@@ -1,0 +1,203 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<style>
+  .game-wrap {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .game-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .game-header h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--accent);
+    text-shadow: var(--glow);
+    letter-spacing: 4px;
+    margin-bottom: 8px;
+  }
+
+  .game-header p {
+    color: var(--muted);
+    letter-spacing: 2px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+  }
+
+  /* Versus display */
+  .versus-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .fighter { text-align: center; flex: 1; }
+
+  .fighter-label {
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .fighter-orb {
+    width: 110px;
+    height: 110px;
+    margin: 0 auto;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    background: var(--surface2);
+    transition: all 0.3s;
+  }
+
+  .fighter.you .fighter-orb {
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 28px rgba(0,245,212,0.18);
+  }
+
+  .fighter.cpu .fighter-orb {
+    border: 2px solid var(--accent2);
+    box-shadow: 0 0 28px rgba(247,37,133,0.18);
+    animation: cpuIdle 1.8s ease-in-out infinite;
+  }
+
+  @keyframes cpuIdle {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .vs-divider {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--muted);
+    letter-spacing: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Weapon choices */
+  .weapons-label {
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+
+  .weapons {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+  }
+
+  .weapon-btn {
+    flex: 1;
+    max-width: 180px;
+    padding: 24px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Rajdhani', sans-serif;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .weapon-btn:hover {
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+    transform: translateY(-6px);
+  }
+
+  .weapon-btn .w-emoji { font-size: 3rem; }
+
+  .weapon-btn .w-name {
+    font-size: 0.72rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .weapon-btn:hover .w-name { color: var(--accent); }
+
+  .back-link {
+    text-align: center;
+    margin-top: 28px;
+  }
+
+  .back-link a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .back-link a:hover { color: var(--accent); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="game-wrap">
+
+  <div class="game-header">
+    <h2>CHOOSE YOUR WEAPON</h2>
+    <p>Pick wisely — the computer is ready</p>
+  </div>
+
+  <!-- VS Bar -->
+  <div class="versus-bar">
+    <div class="fighter you">
+      <div class="fighter-label">You</div>
+      <div class="fighter-orb">❓</div>
+    </div>
+    <div class="vs-divider">VS</div>
+    <div class="fighter cpu">
+      <div class="fighter-label">Computer</div>
+      <div class="fighter-orb">🤖</div>
+    </div>
+  </div>
+
+  <!-- Choice Buttons -->
+  <div class="weapons-label">Select your move</div>
+
+  <div class="weapons">
+    <form method="POST" action="/play" style="display:contents">
+      <button type="submit" name="choice" value="Rock" class="weapon-btn">
+        <span class="w-emoji">✊</span>
+        <span class="w-name">Rock</span>
+      </button>
+      <button type="submit" name="choice" value="Paper" class="weapon-btn">
+        <span class="w-emoji">✋</span>
+        <span class="w-name">Paper</span>
+      </button>
+      <button type="submit" name="choice" value="Scissors" class="weapon-btn">
+        <span class="w-emoji">✌️</span>
+        <span class="w-name">Scissors</span>
+      </button>
+    </form>
+  </div>
+
+  <div class="back-link">
+    <a href="/home">← Back to dashboard</a>
+  </div>
+
+</div>
+{% endblock %}
